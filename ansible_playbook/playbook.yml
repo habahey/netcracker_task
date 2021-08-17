@@ -72,8 +72,7 @@
       mode: u=wrx,g=rx,o=r
   
   - name: "Enable & Restart Netdata"
-    
-  - service:
+    service:
      name: netdata
      enabled: yes
 
