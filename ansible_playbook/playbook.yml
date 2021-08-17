@@ -1,0 +1,77 @@
+# NetTracker Test Playbook
+#
+---
+- hosts: "frontend"
+  become: yes
+  become_method: sudo
+  tasks:
+
+  - name: Stop SELinux
+    command: setenforce 0
+  
+  - name: Disable SELinux
+    ansible.posix.selinux:
+      state: disabled
+
+  - name: Stope FW
+    command: systemctl stop firewalld
+
+  - name: Desable FW
+    command: systemctl disable firewalld
+
+  - name: "Install Nginx"
+    yum:
+      name:  nginx
+      state: latest 
+
+  - template:
+      src: ../templates/nginx/nginx.conf.j2
+      dest: /etc/nginx/nginx.conf
+      owner: root
+      group: root
+      mode: u=wrx,g=rx,o=r,+x
+
+
+  - template:
+      src: ../templates/nginx/netdata-backend.conf.j2
+      dest: /etc/nginx/conf.d/netdata-backend.conf
+      owner: root
+      group: root
+      mode: u=wrx,g=rx,o=r,+x
+
+  - name: Enable Nginx on boot
+    command: systemctl enable nginx 
+ 
+  - name: "Restart Nginx"
+    service:
+      name: nginx
+      state: restarted
+
+      #  - name: Reboot 10sec 
+      #reboot:
+      #reboot_timeout: 10
+
+# Backend
+
+- hosts: "backend"
+  become: yes
+  become_method: sudo 
+  tasks:
+  - name: "Install NetData"
+    apt:
+      name:  netdata 
+      state: present
+
+  - template:
+      src: ../templates/netdata/netdata.conf.j2
+      dest: /etc/netdata/netdata.conf
+      owner: root 
+      group: root 
+      mode: u=wrx,g=rx,o=r,+x
+    notify: Netdata started
+
+  handlers:
+  - name: Netdata started
+    service:
+      name: netdata
+      state: started

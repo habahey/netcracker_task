@@ -1,0 +1,11 @@
+server {
+
+   listen 80;
+
+        access_log /var/log/nginx/netdata-access.log;
+        error_log /var/log/nginx/netdata-error.log;
+
+        location / {
+                    proxy_pass http://u21.local:19999;
+  }
+}
