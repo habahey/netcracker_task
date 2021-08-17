@@ -8,6 +8,8 @@
 
   - name: Stop SELinux
     command: setenforce 0
+    ignore_errors: yes
+    
   
   - name: Disable SELinux
     ansible.posix.selinux:
