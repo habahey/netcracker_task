@@ -74,8 +74,8 @@
   - name: "Enable & Restart Netdata"
     
   - service:
-    name: netdata
-    enabled: yes
+     name: netdata
+     enabled: yes
 
-    name: netdata
-    state: restarted
+     name: netdata
+     state: restarted
