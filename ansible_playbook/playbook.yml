@@ -71,7 +71,7 @@
       group: root 
       mode: u=wrx,g=rx,o=r
   
-  - name: "Restart Nginx"
+  - name: "Restart Netdata"
     service:
       name: netdata
       state: restarted
